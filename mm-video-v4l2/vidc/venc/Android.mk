@@ -55,7 +55,7 @@ endif
 
 # Common Includes
 libmm-venc-inc      := $(LOCAL_PATH)/inc
-libmm-venc-inc      += $(OMX_VIDEO_PATH)/vidc/common/inc
+libmm-venc-inc      += hardware/qcom/media-caf-msm8992/vidc/common/inc
 libmm-venc-inc      += hardware/qcom/media-caf-msm8992/mm-core/inc
 libmm-venc-inc      += hardware/qcom/media-caf-msm8992/libstagefrighthw
 libmm-venc-inc      += $(TARGET_OUT_HEADERS)/qcom/display-caf-msm8992
