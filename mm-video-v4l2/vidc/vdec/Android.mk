@@ -56,10 +56,10 @@ include $(CLEAR_VARS)
 
 # Common Includes
 libmm-vdec-inc          := $(LOCAL_PATH)/inc
-libmm-vdec-inc          += $(OMX_VIDEO_PATH)/vidc/common/inc
+libmm-vdec-inc          += $(TOP)/hardware/qcom/media-caf-msm8992/mm-video-v4l2/vidc/common/inc
 libmm-vdec-inc          += $(TOP)/hardware/qcom/media-caf-msm8992/mm-core/inc
 #DRM include - Interface which loads the DRM library
-libmm-vdec-inc	        += $(OMX_VIDEO_PATH)/DivxDrmDecrypt/inc
+libmm-vdec-inc	        += $(TOP)/hardware/qcom/media-caf-msm8992/mm-video-v4l2/DivxDrmDecrypt/inc
 libmm-vdec-inc          += $(TARGET_OUT_HEADERS)/qcom/display-caf-msm8992
 libmm-vdec-inc          += $(TARGET_OUT_HEADERS)/adreno
 libmm-vdec-inc          += $(TOP)/frameworks/native/include/media/openmax
@@ -117,6 +117,9 @@ LOCAL_SRC_FILES         += src/mp4_utils.cpp
 LOCAL_SRC_FILES         += src/hevc_utils.cpp
 LOCAL_STATIC_LIBRARIES  := libOmxVidcCommon
 LOCAL_SRC_FILES         += src/omx_vdec_msm8974.cpp
+
+# omx_vdec_msm8974.cpp:9375:16: address of array 'extra->data' will always evaluate to 'true'
+LOCAL_CLANG_CFLAGS      += -Wno-pointer-bool-conversion
 
 include $(BUILD_SHARED_LIBRARY)
 
