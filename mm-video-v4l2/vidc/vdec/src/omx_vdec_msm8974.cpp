@@ -2052,6 +2052,13 @@ OMX_ERRORTYPE omx_vdec::component_init(OMX_STRING role)
                 drv_ctx.video_driver_fd);
     }
     //memset(&h264_mv_buff,0,sizeof(struct h264_mv_buffer));
+    control.id = V4L2_CID_MPEG_VIDC_VIDEO_PRIORITY;
+    control.value = V4L2_MPEG_VIDC_VIDEO_PRIORITY_REALTIME_DISABLE;
+
+    if (ioctl(drv_ctx.video_driver_fd, VIDIOC_S_CTRL, &control)) {
+        DEBUG_PRINT_ERROR("Failed to set Default Priority");
+        eRet = OMX_ErrorUnsupportedSetting;
+    }
     return eRet;
 }
 
@@ -3937,7 +3944,7 @@ OMX_ERRORTYPE  omx_vdec::set_parameter(OMX_IN OMX_HANDLETYPE     hComp,
                 break;
             }
             if (m_disable_dynamic_buf_mode) {
-                DEBUG_PRINT_HIGH("Dynamic buffer mode disabled by setprop");
+                DEBUG_PRINT_HIGH("Dynamic buffer mode is disabled");
                 eRet = OMX_ErrorUnsupportedSetting;
                 break;
             }
@@ -4024,6 +4031,15 @@ OMX_ERRORTYPE  omx_vdec::set_parameter(OMX_IN OMX_HANDLETYPE     hComp,
             break;
         }
 
+        case OMX_QTIIndexParamVideoPreferAdaptivePlayback:
+        {
+            DEBUG_PRINT_LOW("set_parameter: OMX_QTIIndexParamVideoPreferAdaptivePlayback");
+            m_disable_dynamic_buf_mode = ((QOMX_ENABLETYPE *)paramData)->bEnable;
+            if (m_disable_dynamic_buf_mode) {
+                DEBUG_PRINT_HIGH("Prefer Adaptive Playback is set");
+            }
+            break;
+        }
 #endif
         case OMX_QcomIndexParamVideoCustomBufferSize:
         {
@@ -4424,6 +4440,39 @@ OMX_ERRORTYPE  omx_vdec::set_config(OMX_IN OMX_HANDLETYPE      hComp,
         }
 
         return ret;
+    } else if ((int)configIndex == (int)OMX_IndexConfigPriority) {
+        OMX_PARAM_U32TYPE *priority = (OMX_PARAM_U32TYPE *)configData;
+        DEBUG_PRINT_LOW("Set_config: priority %d", priority->nU32);
+
+        struct v4l2_control control;
+
+        control.id = V4L2_CID_MPEG_VIDC_VIDEO_PRIORITY;
+        if (priority->nU32 == 0)
+            control.value = V4L2_MPEG_VIDC_VIDEO_PRIORITY_REALTIME_ENABLE;
+        else
+            control.value = V4L2_MPEG_VIDC_VIDEO_PRIORITY_REALTIME_DISABLE;
+
+        if (ioctl(drv_ctx.video_driver_fd, VIDIOC_S_CTRL, &control)) {
+            DEBUG_PRINT_ERROR("Failed to set Priority");
+            ret = OMX_ErrorUnsupportedSetting;
+        }
+        return ret;
+    } else if ((int)configIndex == (int)OMX_IndexConfigOperatingRate) {
+        OMX_PARAM_U32TYPE *rate = (OMX_PARAM_U32TYPE *)configData;
+        DEBUG_PRINT_LOW("Set_config: operating-rate %u fps", rate->nU32 >> 16);
+
+        struct v4l2_control control;
+
+        control.id = V4L2_CID_MPEG_VIDC_VIDEO_OPERATING_RATE;
+        control.value = rate->nU32;
+
+        if (ioctl(drv_ctx.video_driver_fd, VIDIOC_S_CTRL, &control)) {
+            ret = errno == -EBUSY ? OMX_ErrorInsufficientResources :
+                    OMX_ErrorUnsupportedSetting;
+            DEBUG_PRINT_ERROR("Failed to set operating rate %u fps (%s)",
+                    rate->nU32 >> 16, errno == -EBUSY ? "HW Overload" : strerror(errno));
+        }
+        return ret;
     }
 
     return OMX_ErrorNotImplemented;
@@ -4486,6 +4535,8 @@ OMX_ERRORTYPE  omx_vdec::get_extension_index(OMX_IN OMX_HANDLETYPE      hComp,
 #ifdef ADAPTIVE_PLAYBACK_SUPPORTED
     else if (extn_equals(paramName, "OMX.google.android.index.prepareForAdaptivePlayback")) {
         *indexType = (OMX_INDEXTYPE)OMX_QcomIndexParamVideoAdaptivePlaybackMode;
+    } else if (extn_equals(paramName, OMX_QTI_INDEX_PARAM_VIDEO_PREFER_ADAPTIVE_PLAYBACK)) {
+        *indexType = (OMX_INDEXTYPE)OMX_QTIIndexParamVideoPreferAdaptivePlayback;
     }
 #endif
 #ifdef FLEXYUV_SUPPORTED
