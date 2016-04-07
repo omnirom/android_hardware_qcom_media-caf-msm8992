@@ -27,8 +27,8 @@ LOCAL_CFLAGS += -DANDROID_JELLYBEAN_MR2=1
 endif
 
 LOCAL_C_INCLUDES:= \
-        frameworks/native/include/media/openmax \
-        frameworks/native/include/media/hardware
+        frameworks/native-caf/include/media/openmax \
+        frameworks/native-caf/include/media/hardware
 
 LOCAL_SHARED_LIBRARIES :=       \
         libbinder               \
