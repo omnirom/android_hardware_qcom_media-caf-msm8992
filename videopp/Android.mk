@@ -44,8 +44,8 @@ libmm-vidpp-inc          += $(LOCAL_PATH)/inc
 libmm-vidpp-inc          += $(OMX_VIDEO_PATH)/vidc/common/inc
 libmm-vidpp-inc          += hardware/qcom/media-caf-msm8992/mm-core/inc
 libmm-vidpp-inc          += $(TARGET_OUT_HEADERS)/qcom/display
-libmm-vidpp-inc          += frameworks/native-caf/include/media-caf-msm8992/openmax
-libmm-vidpp-inc          += frameworks/native-caf/include/media-caf-msm8992/hardware
+libmm-vidpp-inc          += frameworks/native-caf/include/media/openmax
+libmm-vidpp-inc          += frameworks/native-caf/include/media/hardware
 libmm-vidpp-inc          += $(vidpp-inc)
 libmm-vidpp-inc          += frameworks/av/include/media-caf-msm8992/stagefright
 

@@ -24,7 +24,7 @@ libmm-vidc-inc      := $(LOCAL_PATH)/inc
 libmm-vidc-inc      += $(TOP)/hardware/qcom/media-caf-msm8992/mm-core/inc
 libmm-vidc-inc      += $(TARGET_OUT_HEADERS)/qcom/display
 libmm-vidc-inc      += $(TOP)/hardware/qcom/media-caf-msm8992/libc2dcolorconvert
-libmm-vidc-inc      += $(TOP)/frameworks/av-caf/include/media-caf-msm8992/stagefright
+libmm-vidc-inc      += $(TOP)/frameworks/av-caf/include/media/stagefright
 libmm-vidc-inc      += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 
 LOCAL_MODULE                    := libOmxVidcCommon
