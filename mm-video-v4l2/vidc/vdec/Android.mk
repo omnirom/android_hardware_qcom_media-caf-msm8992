@@ -65,7 +65,7 @@ libmm-vdec-inc          += $(TARGET_OUT_HEADERS)/adreno
 libmm-vdec-inc          += $(TOP)/frameworks/native-caf/include/media-caf-msm8992/openmax
 libmm-vdec-inc          += $(TOP)/frameworks/native-caf/include/media-caf-msm8992/hardware
 libmm-vdec-inc      	+= $(TOP)/hardware/qcom/media-caf-msm8992/libc2dcolorconvert
-libmm-vdec-inc      	+= $(TOP)/frameworks/av-caf/include/media-caf-msm8992/stagefright
+libmm-vdec-inc      	+= $(TOP)/frameworks/av-caf/include/media/stagefright
 libmm-vdec-inc      	+= $(TARGET_OUT_HEADERS)/mm-video/SwVdec
 libmm-vdec-inc      	+= $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 

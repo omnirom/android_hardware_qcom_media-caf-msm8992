@@ -55,7 +55,7 @@ libmm-venc-inc      += $(TARGET_OUT_HEADERS)/adreno
 libmm-venc-inc      += frameworks/native-caf/include/media-caf-msm8992/hardware
 libmm-venc-inc      += frameworks/native-caf/include/media-caf-msm8992/openmax
 libmm-venc-inc      += hardware/qcom/media-caf-msm8992/libc2dcolorconvert
-libmm-venc-inc      += frameworks/av-caf/include/media-caf-msm8992/stagefright
+libmm-venc-inc      += frameworks/av-caf/include/media/stagefright
 libmm-venc-inc      += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 
 # Common Dependencies
