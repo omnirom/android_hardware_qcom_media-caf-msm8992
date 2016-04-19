@@ -60,12 +60,12 @@ libmm-vdec-inc          += $(OMX_VIDEO_PATH)/vidc/common/inc
 libmm-vdec-inc          += $(TOP)/hardware/qcom/media-caf-msm8992/mm-core/inc
 #DRM include - Interface which loads the DRM library
 libmm-vdec-inc	        += $(OMX_VIDEO_PATH)/DivxDrmDecrypt/inc
-libmm-vdec-inc          += $(TARGET_OUT_HEADERS)/qcom/display
+libmm-vdec-inc          += $(TARGET_OUT_HEADERS)/qcom/display-caf-msm8992
 libmm-vdec-inc          += $(TARGET_OUT_HEADERS)/adreno
-libmm-vdec-inc          += $(TOP)/frameworks/native-caf/include/media-caf-msm8992/openmax
-libmm-vdec-inc          += $(TOP)/frameworks/native-caf/include/media-caf-msm8992/hardware
+libmm-vdec-inc          += $(TOP)/frameworks/native-caf/include/media/openmax
+libmm-vdec-inc          += $(TOP)/frameworks/native-caf/include/media/hardware
 libmm-vdec-inc      	+= $(TOP)/hardware/qcom/media-caf-msm8992/libc2dcolorconvert
-libmm-vdec-inc      	+= $(TOP)/frameworks/av-caf/include/media-caf-msm8992/stagefright
+libmm-vdec-inc      	+= $(TOP)/frameworks/av-caf/include/media/stagefright
 libmm-vdec-inc      	+= $(TARGET_OUT_HEADERS)/mm-video/SwVdec
 libmm-vdec-inc      	+= $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 
