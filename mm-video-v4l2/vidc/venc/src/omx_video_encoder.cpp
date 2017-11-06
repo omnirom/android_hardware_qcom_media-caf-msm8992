@@ -2027,16 +2027,18 @@ OMX_ERRORTYPE  omx_venc::component_deinit(OMX_IN OMX_HANDLETYPE hComp)
     }
 
     /*Check if the input buffers have to be cleaned up*/
-    if (m_inp_mem_ptr
+    OMX_BUFFERHEADERTYPE* ptr = m_inp_mem_ptr;
 #ifdef _ANDROID_ICS_
-            && !meta_mode_enable
+    if (meta_mode_enable) {
+        ptr = meta_buffer_hdr;
+    }
 #endif
-       ) {
+    if (ptr) {
         DEBUG_PRINT_LOW("Freeing the Input Memory");
         for (i=0; i<m_sInPortDef.nBufferCountActual; i++ ) {
             if (BITMASK_PRESENT(&m_inp_bm_count, i)) {
                 BITMASK_CLEAR(&m_inp_bm_count, i);
-                free_input_buffer (&m_inp_mem_ptr[i]);
+                free_input_buffer(ptr + i);
             }
 
             if (release_input_done()) {
@@ -2044,8 +2046,8 @@ OMX_ERRORTYPE  omx_venc::component_deinit(OMX_IN OMX_HANDLETYPE hComp)
             }
         }
 
-
-        free(m_inp_mem_ptr);
+        if (m_inp_mem_ptr != meta_buffer_hdr)
+            free(m_inp_mem_ptr);
         m_inp_mem_ptr = NULL;
     }
 
@@ -2317,10 +2319,17 @@ int omx_venc::async_message_process (void *context, void* message)
                     OMX_COMPONENT_GENERATE_EBD);
             break;
         case VEN_MSG_OUTPUT_BUFFER_DONE:
+        {
             omxhdr = (OMX_BUFFERHEADERTYPE*)m_sVenc_msg->buf.clientdata;
+            OMX_U32 bufIndex = (OMX_U32)(omxhdr - omx->m_out_mem_ptr);
 
             if ( (omxhdr != NULL) &&
-                    ((OMX_U32)(omxhdr - omx->m_out_mem_ptr)  < omx->m_sOutPortDef.nBufferCountActual)) {
+                    (bufIndex  < omx->m_sOutPortDef.nBufferCountActual)) {
+                auto_lock l(omx->m_buf_lock);
+                if (BITMASK_ABSENT(&(omx->m_out_bm_count), bufIndex)) {
+                    DEBUG_PRINT_ERROR("Recieved FBD for buffer that is already freed !");
+                    break;
+                }
                 if (!omx->is_secure_session() && (m_sVenc_msg->buf.len <=  omxhdr->nAllocLen)) {
                     omxhdr->nFilledLen = m_sVenc_msg->buf.len;
                     omxhdr->nOffset = m_sVenc_msg->buf.offset;
@@ -2354,6 +2363,7 @@ int omx_venc::async_message_process (void *context, void* message)
             omx->post_event ((unsigned long)omxhdr,m_sVenc_msg->statuscode,
                     OMX_COMPONENT_GENERATE_FBD);
             break;
+        }
         case VEN_MSG_NEED_OUTPUT_BUFFER:
             //TBD what action needs to be done here??
             break;
